@@ -1,0 +1,13 @@
+{
+    "path": "C:/Users/jlcal/OneDrive/UNT-INGENIERIA MECATRONICA/IX CICLO/PRACTICAS/OPC COPEINCA/django/myapp/datos.xlsx",
+    "data": {
+        "energia":{
+            "sheet": "0",
+            "address": "A2"
+        },
+        "velocidad":{
+            "sheet": "1",
+            "address": "B2"
+        }
+    }
+}

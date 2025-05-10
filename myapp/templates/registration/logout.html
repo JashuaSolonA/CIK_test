@@ -1,0 +1,9 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+    <h2>¿Estás seguro de que quieres cerrar sesión?</h2>
+    <form action="{% url 'logout' %}" method="get">
+        {% csrf_token %}
+        <button type="submit">Sí, cerrar sesión</button>
+    </form>
+{% endblock %}

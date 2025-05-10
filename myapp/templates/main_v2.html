@@ -1,0 +1,282 @@
+{% extends 'layouts/base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLUJOGRAMA DE PRODUCCIÓN</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size-adjust: 1.5;
+            background-color: rgb(0,45,45);
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 100%;
+            margin: 0px 20px;
+            color: rgb(0,255,255);
+            padding: 0px;
+            border-radius: 8px;
+            font-size: 56;
+            text-align: center;
+            display: flex;
+            justify-content: space-evenly;
+        }
+        .header {
+            background: #c3c3c3;
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .section {
+            display: flex;
+            justify-content: space-evenly;
+        }
+        .box {
+            margin: 10px 0px;
+            border-radius: 5px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-evenly;
+        }
+        .controls button {
+            margin: 5px;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+        }
+        .borde {
+            border: 4px solid rgb(0,255,255); /* Borde negro de 2px de grosor */
+            padding: 20px; /* Espacio dentro del div */
+            width: 400px; /* Ancho del div */
+            height: 150px;
+            border-radius: 20px;
+            text-align: center; /* Centra el texto dentro del div */
+            display: flex; /* Activa flexbox */
+            flex-direction: column; /* Alinea elementos en columna */
+            align-items: center; /* Centra horizontalmente */
+            justify-content: center; /* Centra verticalmente */
+            margin: 15px 0px; /*Separación entre elementos */
+        }
+        .separar_vertical {
+            margin: 10px 0px;
+        }
+        .separar_horizontal {
+            margin: 0px 50px;
+        }
+
+        .cuadricula {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* 3 columnas iguales */
+            gap: 10px; /* Espacio entre celdas */
+            width: fit-content;
+        }
+
+        .celda {
+            width: 230px;
+            height: 200px;
+            border: 2px solid rgb(0,255,255);
+            padding: 20px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .cuadricula > .celda:nth-child(7) {
+            position: relative;
+            left: 90px;
+        }
+
+        .cuadricula > .celda:nth-child(8) {
+            grid-column: 3;
+            position: relative;
+            left: -90px;
+        }
+
+        .estado_run {
+            border: 4px solid greenyellow;
+            color: black;
+            background-color: greenyellow;
+            border-radius: 10px;
+            padding: 5px;
+            margin: 5px 0;
+        }
+
+        .estado_stop {
+            border: 4px solid red;
+            color: white;
+            background-color: red;
+            border-radius: 10px;
+            padding: 5px;
+            margin: 5px 0;
+        }
+        
+    </style>
+</head>
+
+<body>
+    <div class="container" style="align-items: center;">
+        <span id="fecha">{{fecha}}</span>
+        <span>FLUJOGRAMA DE PRODUCCIÓN</span>
+        <span id="hora">{{hora}}</span>
+    </div>
+    <div class="container">
+        <div class="section">
+            <div class="box" style="font-size-adjust: 1;">
+                <div class="borde">
+                    <p class="separar_vertical">
+                        Consumo de Energía:
+                    </p>
+                    <p id="energia" class="separar_vertical" style="border: 4px solid red; border-radius: 10px;">
+                        {{energia}}
+                    </p>
+                </div>
+                <div class="borde">
+                    <p class="separar_vertical">
+                        Velocidad de la planta:
+                    </p>
+                    <p id="velocidad" class="separar_vertical" style="border: 4px solid red; border-radius: 10px;">
+                        {{velocidad}}
+                    </p>
+                </div>
+                <div class="borde" style="height: 200px;">
+                    <p class="separar_vertical">
+                        Flujos Líquidos
+                    </p>
+                    <p class="separar_vertical">
+                        Licor Separador:
+                    </p>
+                    <p id="liquido" class="separar_vertical" style="border: 4px solid red; border-radius: 10px;">
+                        {{liquido}}
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="section">
+            <div class="box" style="font-size-adjust: 1;">
+                <div class="borde" style="width: 800px; height: auto;">
+                    ACTIVAR CALDEROS
+                </div>
+                <div class="cuadricula">
+                    <div class="celda">
+                        <p class="separar_vertical">Caldero 1</p>
+                        <p id="caldero_1" class="{% if caldero_1 %}estado_run{% else %}estado_stop{% endif %}">
+                            {% if caldero_1 %}ON{% else %}OFF{% endif %}
+                        </p>
+                        <img class="separar_vertical" src="{% static 'images/caldero.jpeg' %}" alt="Caldero 1" width="150">
+                    </div>
+                    <div class="celda">
+                        <p class="separar_vertical">Caldero 2</p>
+                        <p id="caldero_2" class="{% if caldero_2 %}estado_run{% else %}estado_stop{% endif %}">
+                            {% if caldero_2 %}ON{% else %}OFF{% endif %}
+                        </p>
+                        <img class="separar_vertical" src="{% static 'images/caldero.jpeg' %}" alt="Caldero 2" width="150">
+                    </div>
+                    <div class="celda">
+                        <p class="separar_vertical">Caldero 3</p>
+                        <p id="caldero_3" class="{% if caldero_3 %}estado_run{% else %}estado_stop{% endif %}">
+                            {% if caldero_3 %}ON{% else %}OFF{% endif %}
+                        </p>
+                        <img class="separar_vertical" src="{% static 'images/caldero.jpeg' %}" alt="Caldero 3" width="150">
+                    </div>
+                    <div class="celda">
+                        <p class="separar_vertical">Caldero 4</p>
+                        <p id="caldero_4" class="{% if caldero_4 %}estado_run{% else %}estado_stop{% endif %}">
+                            {% if caldero_4 %}ON{% else %}OFF{% endif %}
+                        </p>
+                        <img class="separar_vertical" src="{% static 'images/caldero.jpeg' %}" alt="Caldero 4" width="150">
+                    </div>
+                    <div class="celda">
+                        <p class="separar_vertical">Caldero 5</p>
+                        <p id="caldero_5" class="{% if caldero_5 %}estado_run{% else %}estado_stop{% endif %}">
+                            {% if caldero_5 %}ON{% else %}OFF{% endif %}
+                        </p>
+                        <img class="separar_vertical" src="{% static 'images/caldero.jpeg' %}" alt="Caldero 5" width="150">
+                    </div>
+                    <div class="celda">
+                        <p class="separar_vertical">Caldero 6</p>
+                        <p id="caldero_6" class="{% if caldero_6 %}estado_run{% else %}estado_stop{% endif %}">
+                            {% if caldero_6 %}ON{% else %}OFF{% endif %}
+                        </p>
+                        <img class="separar_vertical" src="{% static 'images/caldero.jpeg' %}" alt="Caldero 6" width="150">
+                    </div>
+                    <div class="celda">
+                        <p class="separar_vertical">Caldero 7</p>
+                        <p id="caldero_7" class="{% if caldero_7 %}estado_run{% else %}estado_stop{% endif %}">
+                            {% if caldero_7 %}ON{% else %}OFF{% endif %}
+                        </p>
+                        <img class="separar_vertical" src="{% static 'images/caldero.jpeg' %}" alt="Caldero 7" width="150">
+                    </div>
+                    <div class="celda">
+                        <p class="separar_vertical">Caldero 8</p>
+                        <p id="caldero_8" class="{% if caldero_8 %}estado_run{% else %}estado_stop{% endif %}">
+                            {% if caldero_8 %}ON{% else %}OFF{% endif %}
+                        </p>
+                        <img class="separar_vertical" src="{% static 'images/caldero.jpeg' %}" alt="Caldero 8" width="150">
+                    </div>
+                  </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function obtenerDatos() {
+            // Realiza la solicitud AJAX a la vista que proporciona los datos
+            fetch('/obtener_ultimo_dato/')  // Cambia la URL si es necesario
+                .then(response => response.json())
+                .then(data => {
+                    // Actualiza los valores de los elementos en la página con los datos recibidos
+                    document.getElementById('caldero_1').textContent = data.ultimo_dato.caldero_1 ? 'ON' : 'OFF';
+                    document.getElementById('caldero_2').textContent = data.ultimo_dato.caldero_2 ? 'ON' : 'OFF';
+                    document.getElementById('caldero_3').textContent = data.ultimo_dato.caldero_3 ? 'ON' : 'OFF';
+                    document.getElementById('caldero_4').textContent = data.ultimo_dato.caldero_4 ? 'ON' : 'OFF';
+                    document.getElementById('caldero_5').textContent = data.ultimo_dato.caldero_5 ? 'ON' : 'OFF';
+                    document.getElementById('caldero_6').textContent = data.ultimo_dato.caldero_6 ? 'ON' : 'OFF';
+                    document.getElementById('caldero_7').textContent = data.ultimo_dato.caldero_7 ? 'ON' : 'OFF';
+                    document.getElementById('caldero_8').textContent = data.ultimo_dato.caldero_8 ? 'ON' : 'OFF';
+                    
+                    // Cambia el color de fondo según el estado (opcional)
+                    document.getElementById('caldero_1').className = data.ultimo_dato.caldero_1 ? 'estado_run' : 'estado_stop';
+                    document.getElementById('caldero_2').className = data.ultimo_dato.caldero_2 ? 'estado_run' : 'estado_stop';
+                    document.getElementById('caldero_3').className = data.ultimo_dato.caldero_3 ? 'estado_run' : 'estado_stop';
+                    document.getElementById('caldero_4').className = data.ultimo_dato.caldero_4 ? 'estado_run' : 'estado_stop';
+                    document.getElementById('caldero_5').className = data.ultimo_dato.caldero_5 ? 'estado_run' : 'estado_stop';
+                    document.getElementById('caldero_6').className = data.ultimo_dato.caldero_6 ? 'estado_run' : 'estado_stop';
+                    document.getElementById('caldero_7').className = data.ultimo_dato.caldero_7 ? 'estado_run' : 'estado_stop';
+                    document.getElementById('caldero_8').className = data.ultimo_dato.caldero_8 ? 'estado_run' : 'estado_stop';
+
+                    // Actualiza los otros datos
+                    document.getElementById('energia').textContent = data.ultimo_dato.energia + ' kWh';
+                    document.getElementById('velocidad').textContent = data.ultimo_dato.velocidad + ' m/s';
+                    document.getElementById('liquido').textContent = data.ultimo_dato.liquido + ' L';
+
+                    document.getElementById('fecha').textContent = data.ultimo_dato.fecha;
+                    document.getElementById('hora').textContent = data.ultimo_dato.hora;
+
+                })
+                .catch(error => console.log('Error al obtener los datos:', error));
+        }
+
+        setInterval(function() {
+            fetch('')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('element_id').innerText = data.new_data;
+                });
+            obtenerDatos();
+        }, 1000);
+
+    </script>
+</body>
+</html>
+
+{% endblock %}

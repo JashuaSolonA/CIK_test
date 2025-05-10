@@ -1,0 +1,282 @@
+{% extends 'layouts/base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLUJOGRAMA DE PRODUCCIÓN</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size-adjust: 1.5;
+            background-color: rgb(0,45,45);
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 100%;
+            margin: 0px 20px;
+            color: rgb(0,255,255);
+            padding: 0px;
+            border-radius: 8px;
+            font-size: 56;
+            text-align: center;
+            display: flex;
+            justify-content: space-evenly;
+        }
+        .header {
+            background: #c3c3c3;
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .section {
+            display: flex;
+            justify-content: space-evenly;
+        }
+        .box {
+            margin: 10px 0px;
+            border-radius: 5px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-evenly;
+        }
+        .controls button {
+            margin: 5px;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+        }
+        .borde {
+            border: 4px solid rgb(0,255,255); /* Borde negro de 2px de grosor */
+            padding: 20px; /* Espacio dentro del div */
+            width: 400px; /* Ancho del div */
+            height: 150px;
+            border-radius: 20px;
+            text-align: center; /* Centra el texto dentro del div */
+            display: flex; /* Activa flexbox */
+            flex-direction: column; /* Alinea elementos en columna */
+            align-items: center; /* Centra horizontalmente */
+            justify-content: center; /* Centra verticalmente */
+            margin: 15px 0px; /*Separación entre elementos */
+        }
+        .separar_vertical {
+            margin: 10px 0px;
+        }
+        .separar_horizontal {
+            margin: 0px 50px;
+        }
+
+        .cuadricula {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* 3 columnas iguales */
+            gap: 10px; /* Espacio entre celdas */
+            width: fit-content;
+        }
+
+        .celda {
+            width: 230px;
+            height: 200px;
+            border: 2px solid rgb(0,255,255);
+            padding: 20px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .cuadricula > .celda:nth-child(7) {
+            position: relative;
+            left: 90px;
+        }
+
+        .cuadricula > .celda:nth-child(8) {
+            grid-column: 3;
+            position: relative;
+            left: -90px;
+        }
+
+        .estado_run {
+            border: 4px solid greenyellow;
+            color: black;
+            background-color: greenyellow;
+            border-radius: 10px;
+            padding: 5px;
+            margin: 5px 0;
+        }
+
+        .estado_stop {
+            border: 4px solid red;
+            color: white;
+            background-color: red;
+            border-radius: 10px;
+            padding: 5px;
+            margin: 5px 0;
+        }
+        
+    </style>
+</head>
+
+<body>
+    <div class="container" style="align-items: center;">
+        <span id="fecha">04/04/2025</span>
+        <span>FLUJOGRAMA DE PRODUCCIÓN</span>
+        <span id="hora">17:34:45</span>
+    </div>
+    <div class="container">
+        <div class="section">
+            <div class="box" style="font-size-adjust: 1;">
+                <div class="borde">
+                    <p class="separar_vertical">
+                        Consumo de Energía (kWh):
+                    </p>
+                    <p id="energia" class="separar_vertical" style="border: 4px solid red; border-radius: 10px;">
+                        
+                    </p>
+                </div>
+                <div class="borde">
+                    <p class="separar_vertical">
+                        Velocidad de la planta ():
+                    </p>
+                    <p id="velocidad" class="separar_vertical" style="border: 4px solid red; border-radius: 10px;">
+                        
+                    </p>
+                </div>
+                <div class="borde" style="height: 200px;">
+                    <p class="separar_vertical">
+                        Flujos Líquidos
+                    </p>
+                    <p class="separar_vertical">
+                        Licor Separador ():
+                    </p>
+                    <p id="liquido" class="separar_vertical" style="border: 4px solid red; border-radius: 10px;">
+                        
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="section">
+            <div class="box" style="font-size-adjust: 1;">
+                <div class="borde" style="width: 800px; height: auto;">
+                    ACTIVAR CALDEROS
+                </div>
+                <div class="cuadricula">
+                    <div class="celda">
+                        <p class="separar_vertical">Caldero 1</p>
+                        <p id="caldero_1" class="estado_run"></p>
+                        <img class="separar_vertical" src="{% static 'images/caldero.jpeg' %}" alt="Caldero 1" width="150">
+                    </div>
+                    <div class="celda">
+                        <p class="separar_vertical">Caldero 2</p>
+                        <p id="caldero_2" class="estado_stop"></p>
+                        <img class="separar_vertical" src="{% static 'images/caldero.jpeg' %}" alt="Caldero 2" width="150">
+                    </div>
+                    <div class="celda">
+                        <p class="separar_vertical">Caldero 3</p>
+                        <p id="caldero_3" class="estado_run"></p>
+                        <img class="separar_vertical" src="{% static 'images/caldero.jpeg' %}" alt="Caldero 3" width="150">
+                    </div>
+                    <div class="celda">
+                        <p class="separar_vertical">Caldero 4</p>
+                        <p id="caldero_4" class="estado_run"></p>
+                        <img class="separar_vertical" src="{% static 'images/caldero.jpeg' %}" alt="Caldero 4" width="150">
+                    </div>
+                    <div class="celda">
+                        <p class="separar_vertical">Caldero 5</p>
+                        <p id="caldero_5" class="estado_run"></p>
+                        <img class="separar_vertical" src="{% static 'images/caldero.jpeg' %}" alt="Caldero 5" width="150">
+                    </div>
+                    <div class="celda">
+                        <p class="separar_vertical">Caldero 6</p>
+                        <p id="caldero_6" class="estado_run"></p>
+                        <img class="separar_vertical" src="{% static 'images/caldero.jpeg' %}" alt="Caldero 6" width="150">
+                    </div>
+                    <div class="celda">
+                        <p class="separar_vertical">Caldero 7</p>
+                        <p id="caldero_7" class="estado_run"></p>
+                        <img class="separar_vertical" src="{% static 'images/caldero.jpeg' %}" alt="Caldero 7" width="150">
+                    </div>
+                    <div class="celda">
+                        <p class="separar_vertical">Caldero 8</p>
+                        <p id="caldero_8" class="estado_run"></p>
+                        <img class="separar_vertical" src="{% static 'images/caldero.jpeg' %}" alt="Caldero 8" width="150">
+                    </div>
+                  </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function actualizarDatos() {
+            fetch('/obtener_ultimo_dato/')
+            .then(responde => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert("Error: " + data.error);
+                    return;
+                }
+
+                let datos = data.ultimo_dato
+
+                let calderos = [
+                    JSON.parse(datos.caldero_1),
+                    JSON.parse(datos.caldero_2),
+                    JSON.parse(datos.caldero_3),
+                    JSON.parse(datos.caldero_4),
+                    JSON.parse(datos.caldero_5),
+                    JSON.parse(datos.caldero_6),
+                    JSON.parse(datos.caldero_7),
+                    JSON.parse(datos.caldero_8)
+                ];
+
+                calderos.forEach((estado, i) => {
+                    let calderoId= `caldero_${i + 1}`;
+                    let elemento=document.getElementById(calderoId);
+
+                    if (!elemento) return;
+
+                    elemento.classList.remove('estado_run', 'estado_stop');
+
+                    if (estado) {
+                        elemento.classList.add('estado_run')
+                        elemento.innerText='ON'
+                    } else {
+                        elemento.classList.add('estado_stop')
+                        elemento.innerText='OFF'
+                    }
+
+                });
+
+                document.getElementById("energia").textContent=JSON.parse(datos.energia);
+                document.getElementById("velocidad").textContent=JSON.parse(datos.velocidad);
+                document.getElementById("liquido").textContent=JSON.parse(datos.liquido);
+
+                document.getElementById("fecha").textContent=JSON.parse(datos.fecha);
+                document.getElementById("hora").textContent=JSON.parse(datos.hora);
+                
+            })
+            .catch(error => {
+                console.error("Error al obtener datos:", error);
+            });
+        }
+
+        setInterval(function() {
+            fetch('')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('element_id').innerText = data.new_data;
+                });
+            actualizarDatos();
+        }, 1000);
+
+    </script>
+</body>
+</html>
+
+{% endblock %}

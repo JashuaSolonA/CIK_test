@@ -1,0 +1,30 @@
+<html>
+
+<head></head>
+
+<body>
+    <div class="container">
+        <h3>Acceder</h3>
+        <hr>
+        <div class="box">
+            {% if form.errors %}
+            <div class="box">
+                <p>Tu usuario y contraseña no coinciden.</p>
+            </div>
+            {% endif %}
+            <form id="form-login" method="post" action="">
+                {% csrf_token %}
+                <div class="box" id="username">
+                    {{form.username}}
+                </div>
+                <div class="box" id="password">
+                    {{form.password}}
+                </div>
+                <button id="btn-registrar" class="start">Entrar</button>
+                <div class="box"></div>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>
